@@ -13,6 +13,10 @@ export const Route = createRootRoute({
       { title: APP_NAME },
       { name: "theme-color", content: "#3F5A4C" },
       {
+        name: "google-site-verification",
+        content: "wKxgJCMe6_Wwjg-8lnRT_n-UBLpXqReDyujh4Lc0Lb4",
+      },
+      {
         name: "description",
         content: "Change orders and T&M tickets as numbered A4 PDFs. A Prima16 tool.",
       },
