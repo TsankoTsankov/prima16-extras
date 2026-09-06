@@ -1,0 +1,11 @@
+# Prima16 Extras
+
+Prima16 Extras (extras.prima16.com) generates numbered A4 PDFs for extra work after a job has started: change orders and time-and-materials tickets.
+
+It is a Prima16 family tool, sibling to Документи (docs.prima16.com). It is not invoicing, not a VAT invoice, not legal advice, and not AIA.
+
+Anyone can fill a form and download a PDF with no account. Free PDFs include a Prima16 Extras footer. A one-time Paddle payment removes the footer on this device. Optional local job file keeps a running contract total. Drafts do not change the total; final documents do.
+
+Languages: Bulgarian (default) and English.
+Operator: Tsanko Valentinov Tsankov, trading as Prima16, Bulgaria.
+Payments: Paddle. No subscription in this version.

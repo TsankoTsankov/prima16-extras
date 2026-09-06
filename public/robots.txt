@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://extras.prima16.com/sitemap.xml

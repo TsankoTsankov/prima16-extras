@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://extras.prima16.com/</loc>
+    <xhtml:link rel="alternate" hreflang="bg" href="https://extras.prima16.com/bg"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://extras.prima16.com/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://extras.prima16.com/"/>
+  </url>
+  <url><loc>https://extras.prima16.com/en</loc></url>
+  <url><loc>https://extras.prima16.com/bg/change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/change-order-generator</loc></url>
+  <url><loc>https://extras.prima16.com/bg/tm-ticket</loc></url>
+  <url><loc>https://extras.prima16.com/en/tm-ticket</loc></url>
+  <url><loc>https://extras.prima16.com/en/tm-ticket-template</loc></url>
+  <url><loc>https://extras.prima16.com/bg/pricing</loc></url>
+  <url><loc>https://extras.prima16.com/en/pricing</loc></url>
+  <url><loc>https://extras.prima16.com/bg/faq</loc></url>
+  <url><loc>https://extras.prima16.com/en/faq</loc></url>
+  <url><loc>https://extras.prima16.com/bg/vs-excel</loc></url>
+  <url><loc>https://extras.prima16.com/en/vs-excel</loc></url>
+  <url><loc>https://extras.prima16.com/en/examples/electrical-change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/examples/plumbing-change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/examples/hvac-change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/examples/remodel-change-order</loc></url>
+  <url><loc>https://extras.prima16.com/en/examples/tm-ticket</loc></url>
+</urlset>
