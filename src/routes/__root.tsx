@@ -31,6 +31,14 @@ export const Route = createRootRoute({
         href: "https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap",
       },
     ],
+    scripts: [
+      {
+        children:
+          "window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments)};",
+      },
+      { src: "/_vercel/insights/script.js", defer: true },
+      { src: "/_vercel/speed-insights/script.js", defer: true },
+    ],
   }),
   component: RootComponent,
 });
