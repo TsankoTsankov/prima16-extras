@@ -1,0 +1,365 @@
+PRIMA16 EXTRAS — BUILD AND LAUNCH LOG
+=====================================
+Written: 7 September 2026
+Operator: Tsanko Valentinov Tsankov, trading as Prima16 (Bulgaria)
+Product name: Prima16 Extras / Prima16 Допълнителни
+Live site: https://extras.prima16.com
+Source: https://github.com/TsankoTsankov/prima16-extras
+Sibling product: https://docs.prima16.com  (Документи — invoices / documents)
+Family hub: https://prima16.com
+
+This file is the operator record of what was built, where it lives, and why
+each decision was made. It is not marketing copy.
+
+
+0. WHY THIS PRODUCT EXISTS
+--------------------------
+Документи (docs.prima16.com) already covers numbered paper that trades send as
+ordinary documents. It does not cover the two papers that appear after the
+contract is signed:
+
+  1. Change order / протокол за допълнителни работи
+  2. Time-and-materials ticket / труд-и-материали
+
+Those two papers are still written in Word or Excel on site, printed, signed,
+and then lost in a folder. Extras exists so a contractor can fill a form on a
+phone and download a numbered A4 PDF in the same visual family as Документи,
+without opening an account.
+
+Rules that drove every build choice:
+
+  - No new paid subscriptions. Launch budget is €0.
+  - Do not spend Lovable credits. The Lovable account was at 0 credits.
+  - Do not build cloud login in v1. Persistence is the browser.
+  - Do not mix this product with Документи payments or unlocks.
+  - Default language is Bulgarian. Default paper is A4.
+  - Paddle is the merchant of record. No Stripe. No subscription in v1.
+  - The site must look like paper, not like a SaaS dashboard.
+
+
+1. WHAT WAS CREATED (PRODUCT)
+-----------------------------
+A public website that generates two document types as A4 (or Letter) PDFs.
+
+A. Change order
+   URL BG:  https://extras.prima16.com/bg/change-order
+   URL EN:  https://extras.prima16.com/en/change-order
+   SEO EN:  https://extras.prima16.com/en/change-order-generator
+   Fields: number, date, add/deduct/schedule, reason, schedule impact,
+           contractor, client, site, contract reference, original contract
+           amount, previous extras, line items, notes, running total
+           (original + previous extras + this document).
+   Status: draft or final. Final is what increments the free-PDF counter.
+
+B. T&M ticket
+   URL BG:  https://extras.prima16.com/bg/tm-ticket
+   URL EN:  https://extras.prima16.com/en/tm-ticket
+   SEO EN:  https://extras.prima16.com/en/tm-ticket-template
+   Same line-item editor. Different heading and numbering prefix so it cannot
+   be confused with a change order or with a tax invoice.
+
+C. Marketing and legal pages (static, bilingual)
+   /               home (Bulgarian default; /en for English)
+   /pricing        free / €1.99 / €19.99
+   /faq            short answers, including "this is not a VAT invoice"
+   /vs-excel       why not stay in a spreadsheet
+   /examples/...   electrical, plumbing, HVAC, remodel, T&M examples
+   /legal/terms
+   /legal/privacy
+   /legal/refunds
+   /blog           thin index so the route exists; not a content factory
+
+D. Unlock model (browser, not account)
+   Free: unlimited drafts; 2 finalised PDFs per browser per calendar month;
+         those PDFs carry a Prima16 Extras footer line.
+   €1.99 one-time: clean PDF for one document type on this device.
+   €19.99 one-time: clean PDF for every Extras generator on this device.
+   Does not unlock docs.prima16.com.
+   Paddle.com is the merchant of record. 30-day refund.
+   Checkout in v1 is simulated in the UI until live Paddle product IDs and
+   webhook verification are wired. The webhook route exists as a stub:
+   https://extras.prima16.com/api/paddle/webhook
+
+E. What is stored, and where
+   All of this is localStorage on the visitor's device. Nothing is sent to a
+   Prima16 database in v1. Keys:
+
+     prima16.extras.draft
+     prima16.extras.job
+     prima16.extras.pricebook
+     prima16.extras.unlocks
+     prima16.extras.usage
+     prima16.extras.contractor
+
+   Clearing the browser, switching device, or using private mode loses the
+   job file and the unlock flags. That is an accepted v1 trade-off so the
+   product can ship without auth and without a paid backend.
+
+F. What this product is not
+   Not a tax invoice.
+   Not bookkeeping software.
+   Not a cloud job folder.
+   Not Документи.
+   Not a Lovable project.
+
+
+2. WHAT WAS CREATED (TECHNICAL)
+-------------------------------
+Stack (forced by the Grok Build / TanStack Start workspace, kept on purpose
+so the live site matches the preview that was tested):
+
+  - TanStack Start on Vite, file-based routes
+  - React
+  - TypeScript
+  - CSS in src/styles.css plus a small UI kit in src/components/ui.tsx
+  - Client-side PDF assembly in src/lib/pdf.ts (print-quality A4 layout,
+    footer line when the browser is not unlocked)
+  - No Supabase in v1. Auth scaffolding from the workspace is present but
+    unused by the public generators.
+
+Important source files:
+
+  src/routes/__root.tsx
+      Document shell, fonts, favicon, GSC verification meta tag.
+  src/routes/index.tsx
+      Redirects bare / into the Bulgarian locale.
+  src/routes/$locale.tsx + src/routes/$locale/*
+      Every public page. Locale is the first path segment: bg | en.
+  src/components/generator.tsx
+      Shared change-order / T&M editor, line items, running total,
+      draft/final, PDF download, unlock modal.
+  src/components/home-page.tsx
+      Landing copy.
+  src/components/site-frame.tsx
+      Header, footer, language switch, family links.
+  src/lib/copy.ts
+      BG/EN strings.
+  src/lib/pages.ts
+      Pricing, FAQ, legal, vs-excel, examples.
+  src/lib/storage.ts
+      localStorage helpers listed above.
+  src/lib/pdf.ts
+      PDF renderer.
+  src/lib/defaults.ts
+      Sample jobs used by "load sample".
+  src/lib/money.ts / ids.ts / locale.ts / types.ts
+      Currency, document numbers, locale helpers, TypeScript shapes.
+  public/sitemap.xml
+      Canonical URLs for GSC.
+  public/robots.txt
+      Allow all, points at the sitemap.
+  public/llms.txt
+      Machine-readable product summary.
+  HUB_CARD.md
+      Exact BG/EN card copy for prima16.com.
+
+Default locale: Bulgarian.
+Default paper: A4.
+Default currency in samples: EUR.
+
+
+3. WHERE THE CODE LIVES
+-----------------------
+GitHub repository
+  Owner:  TsankoTsankov
+  Name:   prima16-extras
+  URL:    https://github.com/TsankoTsankov/prima16-extras
+  Branch: main
+  Visibility: public (set public so Vercel could see the repo; can be made
+              private again after the Vercel GitHub App has access)
+
+Commits on main at time of this log
+  6f5694b  Initial Prima16 Extras: BG/EN generators, A4 PDF, no-account path
+  4a3cac7  Add Google Search Console HTML verification tag.
+
+This workspace also holds the same tree. Edits here were pushed to GitHub
+so Vercel could build from main.
+
+
+4. WHERE THE SITE IS HOSTED
+---------------------------
+Host:     Vercel
+Team:     Prima16
+Plan:     Hobby (€0)
+Project:  prima16-extras
+Project id seen during setup: prj_wmzapJUWbMQwf2nYbFRbY4i2pbkv
+Production host: extras.prima16.com
+
+Why Vercel, not Lovable
+  Lovable was at 0 credits. Importing this repo into Lovable would still
+  spend credits on every edit. Vercel Hobby builds from GitHub for free
+  and already fits the rest of the Prima16 family.
+
+Domain
+  Registrar: Squarespace Domains (prima16.com)
+  Record added (Custom records — not the Vercel DNS preset):
+
+    Type   CNAME
+    Name   extras
+    Data   cname.vercel-dns.com
+           (or the project-specific *.vercel-dns-017.com value shown in
+            the Vercel domain panel, if different)
+
+  Why not the Squarespace "Vercel" preset: that preset also rewrites the
+  apex A record and would have broken prima16.com and docs.prima16.com.
+  Only the extras subdomain was pointed.
+
+  Why not Cloudflare instructions from the first README draft: the live
+  registrar is Squarespace. The CNAME shape is the same; the panel is
+  Squarespace → prima16.com → DNS → Custom records.
+
+HTTPS
+  Issued automatically by Vercel after the CNAME answered.
+
+
+5. SEARCH, STATS, PAYMENTS — WHERE AND WHY
+------------------------------------------
+Google Search Console
+  Property type: URL prefix
+  Property:      https://extras.prima16.com
+  Why a new property: extras is a different host from prima16.com and from
+  docs.prima16.com. Folding it only into the apex property hides crawl
+  errors for this product.
+
+  Verification method that worked:
+    HTML tag, not DNS.
+    Meta added in src/routes/__root.tsx:
+
+      name="google-site-verification"
+      content="wKxgJCMe6_Wwjg-8lnRT_n-UBLpXqReDyujh4Lc0Lb4"
+
+    DNS verification was delayed by Squarespace propagation, so the HTML
+    tag was used instead. Sitemap submitted:
+      https://extras.prima16.com/sitemap.xml
+
+  Indexing is not instant. First impressions in GSC often take days.
+  That wait is expected. It is not a bug.
+
+Stats
+  Intended: Vercel Analytics on this project only (Hobby, free).
+  Not added: GA4, paid analytics, heatmaps.
+  Why: €0 budget and no extra accounts to babysit.
+
+Paddle
+  Existing Prima16 seller account is to be reused.
+  Two new products, separate from Документи:
+
+    Clean PDF, one type, this device     €1.99
+    This device, all Extras generators   €19.99
+
+  Webhook URL reserved:
+    https://extras.prima16.com/api/paddle/webhook
+  Current handler acknowledges POSTs and does not yet verify Paddle
+  signatures or write unlock tokens. Live checkout is the remaining
+  commercial wire-up. Leave Документи products untouched.
+
+
+6. TIMELINE OF WHAT ACTUALLY HAPPENED
+-------------------------------------
+6 September 2026
+  Master spec attached as PRIMA16_EXTRAS_BUILD_PROMPT.md.
+  Instruction: execute Phase 0 (i18n app shell) and Phase 2 (no-account
+  change order) first. Do not build cloud auth. Default paper A4.
+  Default locale Bulgarian.
+
+  Full no-account product was implemented in this workspace: shell,
+  change order, T&M ticket, marketing pages, legal pages, localStorage
+  unlocks, A4 PDF download.
+
+  Lovable credits were already 0. Decision: do not send the project back
+  through Lovable. Create a GitHub repo and host on Vercel Hobby.
+
+  Repo created: TsankoTsankov/prima16-extras.
+  First push: commit 6f5694b.
+
+  Vercel GitHub login was connected, but that is not the same thing as
+  installing the Vercel GitHub App. Early API attempts failed with
+  repo_not_found, then with "install the GitHub integration", then a
+  project was created (prj_wmzapJUWbMQwf2nYbFRbY4i2pbkv) whose git link
+  could not be fully verified from this chat, and file deploys returned
+  403 (no permission to create a production deployment via the connected
+  token). The operator finished the import and domain attach in the
+  Vercel dashboard.
+
+  Squarespace CNAME for extras was added by the operator.
+  Site confirmed live at https://extras.prima16.com
+  Title observed: "Допълнителни работи PDF | Prima16 Extras"
+  HTTPS working. sitemap.xml and robots.txt reachable.
+
+  GSC HTML verification tag committed as 4a3cac7 and pushed to main.
+  Operator confirmed GSC property works.
+
+7 September 2026
+  This log written.
+
+
+7. DISTRIBUTION PLAN THAT WAS AGREED (€0)
+-----------------------------------------
+Do not wait only on Google. Google is slow on a new host.
+
+Do immediately (operator, not code):
+
+  1. Paste the hub card from HUB_CARD.md onto prima16.com.
+  2. Add one sentence on docs.prima16.com pointing at extras
+     for change orders / T&M.
+  3. Send about 15 personal messages to people who already use
+     Документи or who still write extras in Word.
+
+Do not do this week:
+
+  Paid ads, agencies, new analytics tools, a blog calendar,
+  Product Hunt unless 20 people are already ready to click,
+  new product features before anyone has used the live form.
+
+GSC: wait days for first impressions. Check in a week, not the same night.
+
+
+8. WHAT IS STILL OPEN
+---------------------
+  - Confirm Vercel Git integration so future git pushes auto-deploy.
+    If a push does not show a new deployment, Redeploy from the
+    Vercel dashboard.
+  - Enable Vercel Analytics on the extras project if it is not on.
+  - Create the two Paddle products and replace the simulated checkout
+    with live overlay + signed webhook.
+  - Hub card on prima16.com and the docs.prima16.com cross-link, if
+    those are not live yet.
+  - Optional later: magic-link cloud job file. Not required for v1.
+  - Optional: make the GitHub repo private again after the Vercel
+    GitHub App is installed on prima16-extras.
+
+
+9. HOW TO WORK ON IT FROM HERE
+------------------------------
+Do not open this in Lovable.
+
+Local:
+
+  git clone https://github.com/TsankoTsankov/prima16-extras.git
+  cd prima16-extras
+  npm install
+  npm run dev
+
+Live:
+
+  Push to main. Confirm a Vercel deployment of that commit.
+  Domain stays extras.prima16.com.
+
+Smoke after every deploy:
+
+  Open https://extras.prima16.com/bg/change-order on a phone
+  Load sample
+  Finalise PDF
+  Confirm the file downloads and the page still fits the screen
+
+
+10. ONE-LINE SUMMARY
+--------------------
+Prima16 Extras is a no-account, bilingual, A4 PDF generator for change
+orders and T&M tickets, living at extras.prima16.com, sourced from
+github.com/TsankoTsankov/prima16-extras, hosted on Vercel Hobby, indexed
+as its own Search Console property, paid (when wired) through existing
+Paddle, and built because Lovable had no credits and trades still keep
+extras in Word.
+
+End of log.
